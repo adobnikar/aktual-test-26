@@ -1,0 +1,30 @@
+# Assignment / planning documents (not part of the codebase)
+FSD Test Assignment.pdf
+PLAN.md
+STEPS.md
+
+# .NET
+bin/
+obj/
+*.user
+appsettings.*.local.json
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
