@@ -1,3 +1,4 @@
+using AddressBook.Api.Middleware;
 using AddressBook.Application;
 using AddressBook.Infrastructure;
 using AddressBook.Infrastructure.Persistence;
@@ -32,6 +33,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseCors(frontendCorsPolicy);
 
