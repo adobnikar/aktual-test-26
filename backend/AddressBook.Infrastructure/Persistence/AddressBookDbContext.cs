@@ -19,6 +19,8 @@ public class AddressBookDbContext(DbContextOptions<AddressBookDbContext> options
             entity.Property(c => c.PhoneNumber).IsRequired().HasMaxLength(30);
 
             entity.HasIndex(c => c.PhoneNumber).IsUnique();
+
+            entity.HasData(ContactSeed.Contacts);
         });
     }
 }
