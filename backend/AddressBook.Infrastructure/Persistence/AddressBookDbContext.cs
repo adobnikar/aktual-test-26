@@ -13,10 +13,10 @@ public class AddressBookDbContext(DbContextOptions<AddressBookDbContext> options
         {
             entity.HasKey(c => c.Id);
 
-            entity.Property(c => c.FirstName).IsRequired().HasMaxLength(100);
-            entity.Property(c => c.LastName).IsRequired().HasMaxLength(100);
-            entity.Property(c => c.Address).IsRequired().HasMaxLength(250);
-            entity.Property(c => c.PhoneNumber).IsRequired().HasMaxLength(30);
+            entity.Property(c => c.FirstName).IsRequired().HasMaxLength(ContactFieldLengths.FirstName);
+            entity.Property(c => c.LastName).IsRequired().HasMaxLength(ContactFieldLengths.LastName);
+            entity.Property(c => c.Address).IsRequired().HasMaxLength(ContactFieldLengths.Address);
+            entity.Property(c => c.PhoneNumber).IsRequired().HasMaxLength(ContactFieldLengths.PhoneNumber);
 
             entity.HasIndex(c => c.PhoneNumber).IsUnique();
 

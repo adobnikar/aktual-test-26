@@ -4,4 +4,4 @@ public record CreateContactRequest(
     string? FirstName,
     string? LastName,
     string? Address,
-    string? PhoneNumber);
+    string? PhoneNumber) : IContactRequest;
