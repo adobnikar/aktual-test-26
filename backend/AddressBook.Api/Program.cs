@@ -41,3 +41,6 @@ app.UseCors(frontendCorsPolicy);
 app.MapControllers();
 
 app.Run();
+
+// Exposes the implicit Program class to WebApplicationFactory-based integration tests.
+public partial class Program;
