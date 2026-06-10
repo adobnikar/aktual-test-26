@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using AddressBook.Application.Entities;
 using FluentValidation;
 
@@ -9,6 +10,9 @@ namespace AddressBook.Application.Contacts.Validation;
 public abstract class ContactRequestValidator<T> : AbstractValidator<T>
     where T : IContactRequest
 {
+    // Optional leading +, then digits with common separators; at least one digit. Input is trimmed first.
+    private static readonly Regex PhoneNumberRegex = new(@"^\+?[0-9 ()\-./]*[0-9][0-9 ()\-./]*$", RegexOptions.Compiled);
+
     protected ContactRequestValidator()
     {
         RuleFor(r => r.FirstName)
@@ -26,7 +30,7 @@ public abstract class ContactRequestValidator<T> : AbstractValidator<T>
         RuleFor(r => r.PhoneNumber)
             .NotEmpty()
             .MaximumLength(ContactFieldLengths.PhoneNumber)
-            .Matches(@"^\+?[0-9][0-9 ()\-./]*$")
+            .Must(p => string.IsNullOrWhiteSpace(p) || PhoneNumberRegex.IsMatch(p.Trim()))
             .WithMessage("'Phone Number' must be a valid phone number.");
     }
 }
