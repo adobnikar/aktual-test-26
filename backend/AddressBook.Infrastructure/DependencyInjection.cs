@@ -1,4 +1,6 @@
+using AddressBook.Application.Repositories;
 using AddressBook.Infrastructure.Persistence;
+using AddressBook.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +13,8 @@ public static class DependencyInjection
     {
         services.AddDbContext<AddressBookDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("AddressBook")));
+
+        services.AddScoped<IContactRepository, ContactRepository>();
 
         return services;
     }
