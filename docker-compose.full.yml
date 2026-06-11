@@ -1,0 +1,47 @@
+# Full stack: builds and runs the entire application (database + API + frontend).
+#
+#   docker compose -f docker-compose.full.yml up --build
+#
+# The app is served at http://localhost:${APP_PORT:-8080}; nginx inside the web
+# container proxies /api to the backend, so only the web service exposes a host port.
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-addressbook}
+      POSTGRES_USER: ${POSTGRES_USER:-addressbook}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-addressbook}
+    volumes:
+      - addressbook-full-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-addressbook} -d $${POSTGRES_DB:-addressbook}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: ./backend
+    image: addressbook-api
+    # Needed on older Docker daemons (<= 20.10): their default seccomp profile blocks
+    # syscalls .NET 8 requires. Harmless on newer daemons.
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      # EF Core migrations (and seed data) are applied automatically on startup.
+      ConnectionStrings__AddressBook: "Host=db;Port=5432;Database=${POSTGRES_DB:-addressbook};Username=${POSTGRES_USER:-addressbook};Password=${POSTGRES_PASSWORD:-addressbook}"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build: ./frontend
+    image: addressbook-web
+    ports:
+      - "${APP_PORT:-8080}:80"
+    depends_on:
+      - api
+
+volumes:
+  addressbook-full-db-data:
