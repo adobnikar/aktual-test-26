@@ -1,1 +1,68 @@
-<p>contact-form works!</p>
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <h1 class="h3 mb-3">{{ isEditMode ? 'Edit contact' : 'New contact' }}</h1>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="card">
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label" for="firstName">First name</label>
+            <input
+              id="firstName"
+              type="text"
+              class="form-control"
+              formControlName="firstName"
+              [class.is-invalid]="isInvalid('firstName')"
+            />
+            <div class="invalid-feedback">{{ errorMessage('firstName') }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="lastName">Last name</label>
+            <input
+              id="lastName"
+              type="text"
+              class="form-control"
+              formControlName="lastName"
+              [class.is-invalid]="isInvalid('lastName')"
+            />
+            <div class="invalid-feedback">{{ errorMessage('lastName') }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="address">Address</label>
+            <input
+              id="address"
+              type="text"
+              class="form-control"
+              formControlName="address"
+              [class.is-invalid]="isInvalid('address')"
+            />
+            <div class="invalid-feedback">{{ errorMessage('address') }}</div>
+          </div>
+
+          <div class="mb-0">
+            <label class="form-label" for="phoneNumber">Phone number</label>
+            <input
+              id="phoneNumber"
+              type="tel"
+              class="form-control"
+              formControlName="phoneNumber"
+              [class.is-invalid]="isInvalid('phoneNumber')"
+            />
+            <div class="invalid-feedback">{{ errorMessage('phoneNumber') }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 mt-3">
+        <button type="submit" class="btn btn-primary" [disabled]="saving">
+          {{ saving ? 'Saving…' : 'Save' }}
+        </button>
+        <a class="btn btn-outline-secondary" [routerLink]="contactId ? ['/contacts', contactId] : ['/contacts']">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
