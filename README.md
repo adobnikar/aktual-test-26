@@ -83,4 +83,14 @@ Runs 39 tests: validator and service unit tests, plus integration tests that boo
 
 ## Troubleshooting
 
-On old Docker daemons (≤ 20.10) the default seccomp profile blocks syscalls .NET 8 needs, breaking both image builds and containers. The compose file already runs the API with `seccomp:unconfined`; for building, either upgrade Docker or build with a containerized BuildKit builder: `docker buildx create --driver docker-container --use`.
+On old Docker daemons (≤ 20.10) the default seccomp profile blocks syscalls .NET 8 needs, so `up --build` fails with `Failed to create CoreCLR, HRESULT: 0x80070008`. The compose file already runs the API container with `seccomp:unconfined`; building needs a containerized (privileged) BuildKit builder. Either upgrade Docker, or:
+
+```bash
+# one-time: create the privileged builder
+docker buildx create --name seccomp-workaround --driver docker-container
+
+# build both images with it, then start the stack without --build
+docker buildx build --builder seccomp-workaround --load -t addressbook-api backend/
+docker buildx build --builder seccomp-workaround --load -t addressbook-web frontend/
+docker compose -f docker-compose.full.yml up
+```
