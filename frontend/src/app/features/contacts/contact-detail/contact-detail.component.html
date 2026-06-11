@@ -1,1 +1,30 @@
-<p>contact-detail works!</p>
+@if (contact; as c) {
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">{{ c.firstName }} {{ c.lastName }}</h1>
+    <div class="btn-group">
+      <a class="btn btn-outline-secondary" [routerLink]="['/contacts', c.id, 'edit']">Edit</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <dl class="row mb-0">
+        <dt class="col-sm-3">First name</dt>
+        <dd class="col-sm-9">{{ c.firstName }}</dd>
+
+        <dt class="col-sm-3">Last name</dt>
+        <dd class="col-sm-9">{{ c.lastName }}</dd>
+
+        <dt class="col-sm-3">Address</dt>
+        <dd class="col-sm-9">{{ c.address }}</dd>
+
+        <dt class="col-sm-3">Phone number</dt>
+        <dd class="col-sm-9 mb-0">{{ c.phoneNumber }}</dd>
+      </dl>
+    </div>
+  </div>
+
+  <a class="btn btn-link px-0 mt-3" routerLink="/contacts">&larr; Back to contacts</a>
+} @else {
+  <p class="text-muted">Loading…</p>
+}
