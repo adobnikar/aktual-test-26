@@ -30,13 +30,18 @@
             <td>{{ contact.address }}</td>
             <td>{{ contact.phoneNumber }}</td>
             <td class="text-end">
-              <a
-                class="btn btn-sm btn-outline-secondary"
-                [routerLink]="['/contacts', contact.id, 'edit']"
-                (click)="$event.stopPropagation()"
-              >
-                Edit
-              </a>
+              <div class="btn-group">
+                <a
+                  class="btn btn-sm btn-outline-secondary"
+                  [routerLink]="['/contacts', contact.id, 'edit']"
+                  (click)="$event.stopPropagation()"
+                >
+                  Edit
+                </a>
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="confirmDelete(contact, $event)">
+                  Delete
+                </button>
+              </div>
             </td>
           </tr>
         } @empty {

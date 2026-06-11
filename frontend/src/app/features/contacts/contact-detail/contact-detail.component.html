@@ -3,6 +3,7 @@
     <h1 class="h3 mb-0">{{ c.firstName }} {{ c.lastName }}</h1>
     <div class="btn-group">
       <a class="btn btn-outline-secondary" [routerLink]="['/contacts', c.id, 'edit']">Edit</a>
+      <button type="button" class="btn btn-outline-danger" (click)="confirmDelete(c)">Delete</button>
     </div>
   </div>
 

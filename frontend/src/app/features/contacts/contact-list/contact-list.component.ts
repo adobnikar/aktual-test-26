@@ -2,10 +2,11 @@ import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { EMPTY, Subject, catchError, debounceTime, startWith, switchMap, tap } from 'rxjs';
 import { Contact } from '../../../core/models/contact.model';
 import { ContactService } from '../../../core/services/contact.service';
+import { ConfirmModalComponent } from '../../../shared/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-contact-list',
@@ -17,6 +18,7 @@ export class ContactListComponent implements OnInit {
   private readonly formBuilder = inject(NonNullableFormBuilder);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly modalService = inject(NgbModal);
 
   private readonly reload$ = new Subject<void>();
 
@@ -72,5 +74,25 @@ export class ContactListComponent implements OnInit {
 
   openContact(contact: Contact): void {
     this.router.navigate(['/contacts', contact.id]);
+  }
+
+  confirmDelete(contact: Contact, event: Event): void {
+    event.stopPropagation();
+
+    const modalRef = this.modalService.open(ConfirmModalComponent);
+    modalRef.componentInstance.title = 'Delete contact';
+    modalRef.componentInstance.message = `Are you sure you want to delete ${contact.firstName} ${contact.lastName}?`;
+    modalRef.componentInstance.confirmLabel = 'Delete';
+
+    modalRef.closed.subscribe(() => {
+      this.contactService.deleteContact(contact.id).subscribe(() => {
+        // Step back a page when the last item on it was deleted.
+        if (this.contacts.length === 1 && this.page > 1) {
+          this.page--;
+        }
+
+        this.reload$.next();
+      });
+    });
   }
 }
